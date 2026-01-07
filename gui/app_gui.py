@@ -13,7 +13,7 @@ class GuiCreator(object):
         self.helper = Helper()
         self.checker = Checker()
         self.ico_image = os.path.join(os.getcwd(), "images", "yams.ico")
-        self.rows = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        self.rows = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         self.index_start_x = 20
         self.index_start_y = 50
 
@@ -76,9 +76,8 @@ class GuiCreator(object):
 
     def check_entries(self, entries_numbers):
         '''player1'''
-
         if entries_numbers[0].get() != "" and entries_numbers[5].get() != "" and entries_numbers[10].get() != "" and \
-                entries_numbers[15] != "" and entries_numbers[20].get() != "" and entries_numbers[25].get() != "":
+                entries_numbers[15].get() != "" and entries_numbers[20].get() != "" and entries_numbers[25].get() != "":
             button_player1_down["state"] = "normal"
             button_player1_down["bg"] = "#C4F3FF"
         else:
@@ -89,7 +88,7 @@ class GuiCreator(object):
             entries_numbers[60]["state"] ="disabled"
 
         if entries_numbers[1].get() != "" and entries_numbers[6].get() != "" and entries_numbers[11].get() != "" and \
-                entries_numbers[16] != "" and entries_numbers[21].get() != "" and entries_numbers[26].get() != "":
+                entries_numbers[16].get() != "" and entries_numbers[21].get() != "" and entries_numbers[26].get() != "":
 
             button_player1_up["state"] = "normal"
             button_player1_up["bg"] = "#C4F3FF"
@@ -100,7 +99,7 @@ class GuiCreator(object):
             entries_numbers[61]["state"] = "disabled"
 
         if entries_numbers[2].get() != "" and entries_numbers[7].get() != "" and entries_numbers[12].get() != "" and \
-                entries_numbers[17] != "" and entries_numbers[22].get() != "" and entries_numbers[27].get() != "":
+                entries_numbers[17].get() != "" and entries_numbers[22].get() != "" and entries_numbers[27].get() != "":
             button_player1_up_down["state"] = "normal"
             button_player1_up_down["bg"] = "#C4F3FF"
         else:
@@ -110,7 +109,7 @@ class GuiCreator(object):
             entries_numbers[62]["state"] = "disabled"
 
         if entries_numbers[3].get() != "" and entries_numbers[8].get() != "" and entries_numbers[13].get() != "" and \
-                entries_numbers[18] != "" and entries_numbers[23].get() != "" and entries_numbers[28].get() != "":
+                entries_numbers[18].get() != "" and entries_numbers[23].get() != "" and entries_numbers[28].get() != "":
             button_player1_free["state"] = "normal"
             button_player1_free["bg"] = "#C4F3FF"
         else:
@@ -120,7 +119,7 @@ class GuiCreator(object):
             entries_numbers[63]["state"] = "disabled"
 
         if entries_numbers[4].get() != "" and entries_numbers[9].get() != "" and entries_numbers[14].get() != "" and \
-                entries_numbers[19] != "" and entries_numbers[24].get() != "" and entries_numbers[29].get() != "":
+                entries_numbers[19].get() != "" and entries_numbers[24].get() != "" and entries_numbers[29].get() != "":
             button_player1_served["state"] = "normal"
             button_player1_served["bg"] = "#C4F3FF"
         else:
@@ -131,7 +130,7 @@ class GuiCreator(object):
 
         '''player2'''
         if entries_numbers[30].get() != "" and entries_numbers[35].get() != "" and entries_numbers[40].get() != "" and \
-                entries_numbers[45] != "" and entries_numbers[50].get() != "" and entries_numbers[55].get() != "":
+                entries_numbers[45].get() != "" and entries_numbers[50].get() != "" and entries_numbers[55].get() != "":
             button_player2_down["state"] = "normal"
             button_player2_down["bg"] = "#C4F3FF"
         else:
@@ -141,7 +140,7 @@ class GuiCreator(object):
             entries_numbers[65]["state"] = "disabled"
 
         if entries_numbers[31].get() != "" and entries_numbers[36].get() != "" and entries_numbers[41].get() != "" and \
-                entries_numbers[46] != "" and entries_numbers[51].get() != "" and entries_numbers[56].get() != "":
+                entries_numbers[46].get() != "" and entries_numbers[51].get() != "" and entries_numbers[56].get() != "":
             button_player2_up["state"] = "normal"
             button_player2_up["bg"] = "#C4F3FF"
         else:
@@ -151,7 +150,7 @@ class GuiCreator(object):
             entries_numbers[66]["state"] = "disabled"
 
         if entries_numbers[32].get() != "" and entries_numbers[37].get() != "" and entries_numbers[42].get() != "" and \
-                entries_numbers[47] != "" and entries_numbers[52].get() != "" and entries_numbers[57].get() != "":
+                entries_numbers[47].get() != "" and entries_numbers[52].get() != "" and entries_numbers[57].get() != "":
             button_player2_up_down["state"] = "normal"
             button_player2_up_down["bg"] = "#C4F3FF"
         else:
@@ -161,7 +160,7 @@ class GuiCreator(object):
             entries_numbers[67]["state"] = "disabled"
 
         if entries_numbers[33].get() != "" and entries_numbers[38].get() != "" and entries_numbers[43].get() != "" and \
-                entries_numbers[48] != "" and entries_numbers[53].get() != "" and entries_numbers[58].get() != "":
+                entries_numbers[48].get() != "" and entries_numbers[53].get() != "" and entries_numbers[58].get() != "":
             button_player2_free["state"] = "normal"
             button_player2_free["bg"] = "#C4F3FF"
         else:
@@ -171,7 +170,7 @@ class GuiCreator(object):
             entries_numbers[68]["state"] = "disabled"
 
         if entries_numbers[34].get() != "" and entries_numbers[39].get() != "" and entries_numbers[44].get() != "" and \
-                entries_numbers[49] != "" and entries_numbers[54].get() != "" and entries_numbers[59].get() != "":
+                entries_numbers[49].get() != "" and entries_numbers[54].get() != "" and entries_numbers[59].get() != "":
             button_player2_served["state"] = "normal"
             button_player2_served["bg"] = "#C4F3FF"
         else:
@@ -180,7 +179,93 @@ class GuiCreator(object):
             entries_numbers[69].delete(0, tkinter.END)
             entries_numbers[69]["state"] = "disabled"
 
+    def check_small_big_totals(self, entries_numbers, list_buttons):
+        if entries_numbers[120].get() != "" and entries_numbers[125].get() != "":
+            print("entered")
+            list_buttons[0]["state"] = "normal"
+            list_buttons[0]["bg"] = "#C4F3FF"
+        else:
+            list_buttons[0]["text"] = ""
+            list_buttons[0]["bg"] = "#f0f0f0"
+            list_buttons[0]["state"] = "disabled"
 
+        if entries_numbers[121].get() != "" and entries_numbers[126].get() != "":
+            list_buttons[1]["state"] = "normal"
+            list_buttons[1]["bg"] = "#C4F3FF"
+        else:
+            list_buttons[1]["text"] = ""
+            list_buttons[1]["bg"] = "#f0f0f0"
+            list_buttons[1]["state"] = "disabled"
+
+        if entries_numbers[122].get() != "" and entries_numbers[127].get() != "":
+            list_buttons[2]["state"] = "normal"
+            list_buttons[2]["bg"] = "#C4F3FF"
+        else:
+            list_buttons[2]["text"] = ""
+            list_buttons[2]["bg"] = "#f0f0f0"
+            list_buttons[2]["state"] = "disabled"
+
+        if entries_numbers[123].get() != "" and entries_numbers[128].get() != "":
+            list_buttons[3]["state"] = "normal"
+            list_buttons[3]["bg"] = "#C4F3FF"
+        else:
+            list_buttons[3]["text"] = ""
+            list_buttons[3]["bg"] = "#f0f0f0"
+            list_buttons[3]["state"] = "disabled"
+
+        if entries_numbers[124].get() != "" and entries_numbers[129].get() != "":
+            list_buttons[4]["state"] = "normal"
+            list_buttons[4]["bg"] = "#C4F3FF"
+        else:
+            list_buttons[4]["text"] = ""
+            list_buttons[4]["bg"] = "#f0f0f0"
+            list_buttons[4]["state"] = "disabled"
+
+        if entries_numbers[130].get() != "" and entries_numbers[135].get() != "":
+            list_buttons[5]["state"] = "normal"
+            list_buttons[5]["bg"] = "#C4F3FF"
+        else:
+            list_buttons[5]["text"] = ""
+            list_buttons[5]["bg"] = "#f0f0f0"
+            list_buttons[5]["state"] = "disabled"
+
+        if entries_numbers[131].get() != "" and entries_numbers[136].get() != "":
+            list_buttons[6]["state"] = "normal"
+            list_buttons[6]["bg"] = "#C4F3FF"
+        else:
+            list_buttons[6]["text"] = ""
+            list_buttons[6]["bg"] = "#f0f0f0"
+            list_buttons[6]["state"] = "disabled"
+
+        if entries_numbers[132].get() != "" and entries_numbers[137].get() != "":
+            list_buttons[7]["state"] = "normal"
+            list_buttons[7]["bg"] = "#C4F3FF"
+        else:
+            list_buttons[7]["text"] = ""
+            list_buttons[7]["bg"] = "#f0f0f0"
+            list_buttons[7]["state"] = "disabled"
+
+        if entries_numbers[133].get() != "" and entries_numbers[138].get() != "":
+            list_buttons[8]["state"] = "normal"
+            list_buttons[8]["bg"] = "#C4F3FF"
+        else:
+            list_buttons[8]["text"] = ""
+            list_buttons[8]["bg"] = "#f0f0f0"
+            list_buttons[8]["state"] = "disabled"
+
+        if entries_numbers[134].get() != "" and entries_numbers[139].get() != "":
+            list_buttons[9]["state"] = "normal"
+            list_buttons[9]["bg"] = "#C4F3FF"
+        else:
+            list_buttons[9]["text"] = ""
+            list_buttons[9]["bg"] = "#f0f0f0"
+            list_buttons[9]["state"] = "disabled"
+
+    def totals_big_small_calculations(self, row, big_number, small_number, list_buttons):
+        print("row: ", row, "big_number: ", big_number, "small_number: ", small_number, list_buttons)
+        result = self.helper.calculate_totals_bs(row, int(big_number), int(small_number))
+        list_buttons[row-1]["text"] = str(result)
+        list_buttons[row-1]["state"] = "disabled"
 
     def compute_colouring(self, list_entry, result, row_number):
         list_entry["state"] = "normal"
@@ -685,7 +770,6 @@ class GuiCreator(object):
                 width=7,
                 relief="raised",
             )
-            #globals()[f"entry_{i+30}"].insert(0, str(i+30))
             x = x0 + col * dx
             y = y0 + row * dy
             entries_numbers.append(globals()[f"entry_{i + 30}"])
@@ -696,7 +780,7 @@ class GuiCreator(object):
         y_start = 305
         # next entry is 63
         for i in range(0, 10):
-            globals()[f"entry_{i + 63}"] = Entry(frame_table, bg="#ffffff", bd=2, fg="#000000", border=2,
+            globals()[f"entry_{i + 63}"] = Entry(frame_table, bg="#EDE8E8", bd=2, fg="#000000", border=2,
                                                  justify="center", font=("Arial", 8, "bold"), cursor="arrow", width=7,
                                                  relief="solid", state="disabled",
                                                  )
@@ -706,7 +790,310 @@ class GuiCreator(object):
                 x_start += 53
             else:
                 x_start += 49
+
+        '''create lower games'''
+        '''5 * 5 = 25'''
+        #player1
+        #index is at 70
+        x0 = 45
+        y0 = 343
+        dx = 49
+        dy = 38
+
+        for i in range(25):
+            row = i // 5
+            col = i % 5
+            if i>=20:
+                globals()[f"entry_{i+70}"] = Entry(
+                    frame_table,
+                    bg="#F0F0F0",
+                    bd=2,
+                    fg="#000000",
+                    border=2,
+                    justify="center",
+                    font=("Arial", 8, "bold"),
+                    cursor="arrow",
+                    width=7,
+                    relief="solid",
+                )
+                x = x0 + col * dx
+                y = y0 + row * dy
+                entries_numbers.append(globals()[f"entry_{i+70}"])
+                globals()[f"entry_{i+70}"].place(x=x, y=y, height=38)
+            else:
+                globals()[f"entry_{i + 70}"] = Entry(
+                    frame_table,
+                    bg="#ffffff",
+                    bd=2,
+                    fg="#000000",
+                    border=2,
+                    justify="center",
+                    font=("Arial", 8, "bold"),
+                    cursor="arrow",
+                    width=7,
+                    relief="raised",
+                )
+                x = x0 + col * dx
+                y = y0 + row * dy
+                entries_numbers.append(globals()[f"entry_{i + 70}"])
+                globals()[f"entry_{i + 70}"].place(x=x, y=y, height=38)
+        # player2
+        # index is at 95
+        x0 = 293.5
+        y0 = 343
+        dx = 49
+        dy = 38
+        for i in range(25):
+            row = i // 5
+            col = i % 5
+            if i >= 20:
+                globals()[f"entry_{i + 95}"] = Entry(
+                    frame_table,
+                    bg="#F0F0F0",
+                    bd=2,
+                    fg="#000000",
+                    border=2,
+                    justify="center",
+                    font=("Arial", 8, "bold"),
+                    cursor="arrow",
+                    width=7,
+                    relief="solid",
+                )
+                x = x0 + col * dx
+                y = y0 + row * dy
+                entries_numbers.append(globals()[f"entry_{i + 95}"])
+                globals()[f"entry_{i + 95}"].place(x=x, y=y, height=38)
+            else:
+                globals()[f"entry_{i + 95}"] = Entry(
+                    frame_table,
+                    bg="#ffffff",
+                    bd=2,
+                    fg="#000000",
+                    border=2,
+                    justify="center",
+                    font=("Arial", 8, "bold"),
+                    cursor="arrow",
+                    width=7,
+                    relief="raised",
+                )
+                x = x0 + col * dx
+                y = y0 + row * dy
+                entries_numbers.append(globals()[f"entry_{i + 95}"])
+                globals()[f"entry_{i + 95}"].place(x=x, y=y, height=38)
         print(entries_numbers)
+        '''small and bigs'''
+        #player1
+        #index is at 120
+        #5 *2=10
+        x0 = 45
+        y0 = 533
+        dx = 49
+        dy = 38
+
+        for i in range(10):
+            row = i // 5
+            col = i % 5
+            globals()[f"entry_{i + 120}"] = Entry(
+                frame_table,
+                bg="#ffffff",
+                bd=2,
+                fg="#000000",
+                border=2,
+                justify="center",
+                font=("Arial", 8, "bold"),
+                cursor="arrow",
+                width=7,
+                relief="raised",
+            )
+            x = x0 + col * dx
+            y = y0 + row * dy
+            #globals()[f"entry_{i + 120}"].insert(0, str(i+120))
+            entries_numbers.append(globals()[f"entry_{i + 120}"])
+            globals()[f"entry_{i + 120}"].place(x=x, y=y, height=38)
+            globals()[f"entry_{i + 120}"].bind("<KeyRelease>", lambda event: self.check_small_big_totals(entries_numbers, list_buttons_totals))
+        # player2
+        # index is at 130
+        # 5 *2=10
+        x0 = 293.5
+        y0 = 533
+        dx = 49
+        dy = 38
+
+        for i in range(10):
+            row = i // 5
+            col = i % 5
+            globals()[f"entry_{i + 130}"] = Entry(
+                frame_table,
+                bg="#ffffff",
+                bd=2,
+                fg="#000000",
+                border=2,
+                justify="center",
+                font=("Arial", 8, "bold"),
+                cursor="arrow",
+                width=7,
+                relief="raised",
+            )
+            x = x0 + col * dx
+            y = y0 + row * dy
+            #globals()[f"entry_{i + 130}"].insert(0, str(i+130))
+            entries_numbers.append(globals()[f"entry_{i + 130}"])
+            globals()[f"entry_{i + 130}"].place(x=x, y=y, height=38)
+            globals()[f"entry_{i + 130}"].bind("<KeyRelease>",lambda event: self.check_small_big_totals(entries_numbers, list_buttons_totals))
+        '''totals for big and small'''
+        x_start = 42
+        y_start = 607
+        list_buttons_totals =  list()
+
+        # Button 0
+        button_0 = Button(
+            frame_table,
+            bg="#F0F0F0", bd=2, fg="#000000", border=2,
+            justify="center", font=("Arial", 8, "bold"),
+            cursor="arrow", width=6, relief="solid",
+            state="disabled", height=2, anchor="center",
+            command=lambda : self.totals_big_small_calculations(1, entries_numbers[125].get(),
+                                                                entries_numbers[120].get(), list_buttons_totals))
+        button_0.place(x=x_start, y=y_start)
+        list_buttons_totals.append(button_0)
+
+        x_start += 49
+
+        # Button 1
+        button_1 = Button(
+            frame_table,
+            bg="#F0F0F0", bd=2, fg="#000000", border=2,
+            justify="center", font=("Arial", 8, "bold"),
+            cursor="arrow", width=6, relief="solid",
+            state="disabled", height=2, anchor="center",
+            command=lambda: self.totals_big_small_calculations(2, entries_numbers[126].get(),
+                                                               entries_numbers[121].get(),
+                                                               list_buttons_totals))
+        button_1.place(x=x_start, y=y_start)
+        list_buttons_totals.append(button_1)
+
+        x_start += 49
+
+        # Button 2
+
+        button_2 = Button(
+            frame_table,
+            bg="#F0F0F0", bd=2, fg="#000000", border=2,
+            justify="center", font=("Arial", 8, "bold"),
+            cursor="arrow", width=6, relief="solid",
+            state="disabled", height=2, anchor="center",
+            command=lambda: self.totals_big_small_calculations(3, entries_numbers[127].get(),
+                                                               entries_numbers[122].get(),
+                                                               list_buttons_totals))
+        button_2.place(x=x_start, y=y_start)
+        list_buttons_totals.append(button_2)
+        x_start += 49
+
+        # Button 3
+        button_3 = Button(
+            frame_table,
+            bg="#F0F0F0", bd=2, fg="#000000", border=2,
+            justify="center", font=("Arial", 8, "bold"),
+            cursor="arrow", width=6, relief="solid",
+            state="disabled", height=2, anchor="center",
+            command=lambda: self.totals_big_small_calculations(4, entries_numbers[128].get(),
+                                                               entries_numbers[123].get(),
+                                                               list_buttons_totals))
+        button_3.place(x=x_start, y=y_start)
+        list_buttons_totals.append(button_3)
+        x_start += 49
+
+        # Button 4
+        row_key = self.rows[4]
+
+        button_4 = Button(
+            frame_table,
+            bg="#F0F0F0", bd=2, fg="#000000", border=2,
+            justify="center", font=("Arial", 8, "bold"),
+            cursor="arrow", width=6, relief="solid",
+            state="disabled", height=2, anchor="center",
+            command=lambda: self.totals_big_small_calculations(5, entries_numbers[129].get(),
+                                                               entries_numbers[124].get(),
+                                                               list_buttons_totals))
+        button_4.place(x=x_start, y=y_start)
+        list_buttons_totals.append(button_4)
+
+        x_start += 53  # special case
+
+        # Button 5
+        button_5 = Button(
+            frame_table,
+            bg="#F0F0F0", bd=2, fg="#000000", border=2,
+            justify="center", font=("Arial", 8, "bold"),
+            cursor="arrow", width=6, relief="solid",
+            state="disabled", height=2, anchor="center",
+            command=lambda: self.totals_big_small_calculations(6, entries_numbers[135].get(),
+                                                               entries_numbers[130].get(),
+                                                               list_buttons_totals))
+        button_5.place(x=x_start, y=y_start)
+        list_buttons_totals.append(button_5)
+
+        x_start += 49
+
+        # Button 6
+        button_6 = Button(
+            frame_table,
+            bg="#F0F0F0", bd=2, fg="#000000", border=2,
+            justify="center", font=("Arial", 8, "bold"),
+            cursor="arrow", width=6, relief="solid",
+            state="disabled", height=2, anchor="center",
+            command=lambda: self.totals_big_small_calculations(7, entries_numbers[136].get(),
+                                                               entries_numbers[131].get(),
+                                                               list_buttons_totals))
+        button_6.place(x=x_start, y=y_start)
+        list_buttons_totals.append(button_6)
+        x_start += 49
+
+        # Button 7
+        button_7 = Button(
+            frame_table,
+            bg="#F0F0F0", bd=2, fg="#000000", border=2,
+            justify="center", font=("Arial", 8, "bold"),
+            cursor="arrow", width=6, relief="solid",
+            state="disabled", height=2, anchor="center",
+            command=lambda: self.totals_big_small_calculations(8, entries_numbers[137].get(),
+                                                               entries_numbers[132].get(),
+                                                               list_buttons_totals))
+        button_7.place(x=x_start, y=y_start)
+        list_buttons_totals.append(button_7)
+
+        x_start += 49
+
+        # Button 8
+        button_8 = Button(
+            frame_table,
+            bg="#F0F0F0", bd=2, fg="#000000", border=2,
+            justify="center", font=("Arial", 8, "bold"),
+            cursor="arrow", width=6, relief="solid",
+            state="disabled", height=2, anchor="center",
+            command=lambda: self.totals_big_small_calculations(9, entries_numbers[138].get(),
+                                                               entries_numbers[133].get(),
+                                                               list_buttons_totals))
+        button_8.place(x=x_start, y=y_start)
+        list_buttons_totals.append(button_8)
+
+        x_start += 49
+
+        # Button 9
+        button_9 = Button(
+            frame_table,
+            bg="#F0F0F0", bd=2, fg="#000000", border=2,
+            justify="center", font=("Arial", 8, "bold"),
+            cursor="arrow", width=6, relief="solid",
+            state="disabled", height=2, anchor="center",
+            command=lambda: self.totals_big_small_calculations(10, entries_numbers[139].get(),
+                                                               entries_numbers[134].get(),
+                                                               list_buttons_totals))
+
+        button_9.place(x=x_start, y=y_start)
+        list_buttons_totals.append(button_9)
+
+        x_start += 49
 
     def create_main_gui(self):
         root = Tk()

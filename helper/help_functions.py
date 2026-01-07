@@ -40,7 +40,7 @@ class Helper:
     def calculate_totals_bs(self, row_number, big, small) -> int:
         result = 0
         if row_number == 5 or row_number == 10:
-            result = (int(big) - int(small)) * 2
+            result = (big -small) * 2
         else:
             result = big - small
         return result
