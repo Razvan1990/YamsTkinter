@@ -16,6 +16,115 @@ class GuiCreator(object):
         self.rows = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         self.index_start_x = 20
         self.index_start_y = 50
+        self.seconds = 0
+        self.minutes = 0
+        self.hours = 0
+        self.running_time = False
+        self.dict_scores = {}
+
+    def update_clock(self, label_clock):
+        if self.running_time:
+            result = ""
+            self.seconds += 1
+            if self.seconds == 60:
+                self.seconds = 0
+                self.minutes += 1
+                self.hours = 0
+            if self.minutes == 60:
+                self.seconds = 0
+                self.minutes = 0
+                self.hours += 1
+            result = f"{self.hours:02d}:{self.minutes:02d}:{self.seconds:02d}"
+            label_clock["text"] = result
+        # here to call it everytime, no matter the running time
+        label_clock.after(1000, lambda: self.update_clock(label_clock))
+
+    def make_calculations(self, list_entries, index_start1, index_start2):
+        player1_score = 0
+        player2_score = 0
+        list_diff = []
+        for i in range(index_start1, index_start1 + 5):
+            print(list_entries[i].get())
+            if list_entries[i].get().isnumeric():
+                player1_score += int(list_entries[i].get())
+        for i in range(index_start2, index_start2 + 5):
+            print(list_entries[i].get())
+            if list_entries[i].get().isnumeric():
+                player2_score += int(list_entries[i].get())
+        diff_score = abs(player2_score - player1_score)
+        if player1_score > player2_score:
+            list_diff.append(entry_player1.get())
+            list_diff.append(diff_score)
+        elif player2_score > player1_score:
+            list_diff.append(entry_player2.get())
+            list_diff.append(diff_score)
+        else:
+            list_diff.append("EQUAL")
+            list_diff.append(diff_score)
+        return player1_score, player2_score, list_diff
+
+    def calculate_results(self, list_entries, list_buttons):
+        '''
+
+        :param list_entries: all the entries from the from full till yams
+        :param list_buttons: buttons from the small and big totals
+        :return: the self.dict_scores will be a dict like: {p1:{"totals":x, "full":y....}, p2:"{"totals":x2, "full":y2}, difference: {"totals":abs(x2-x1)...}
+        '''
+
+        index_starting_p1 = 60
+        index_starting_p2 = 65
+        # calculate totals
+        total_player1, total_player2, diff_totals = self.make_calculations(list_entries, index_starting_p1,index_starting_p2)
+        # calculate full
+        index_starting_p1 = 70
+        index_starting_p2 = 95
+        full_player1, full_player2, diff_full = self.make_calculations(list_entries, index_starting_p1,index_starting_p2)
+        # calculate small straight
+        index_starting_p1 = 75
+        index_starting_p2 = 100
+        straight_s_player1, straight_s_player2, diff_straight_s = self.make_calculations(list_entries, index_starting_p1,index_starting_p2)
+        # calculate big straight
+        index_starting_p1 = 80
+        index_starting_p2 = 105
+        straight_b_player1, straight_b_player2, diff_straight_b = self.make_calculations(list_entries,index_starting_p1,index_starting_p2)
+        #calculate 4 of a kind
+        index_starting_p1 = 85
+        index_starting_p2 = 110
+        careu_player1, careu_player2, diff_careu = self.make_calculations(list_entries,index_starting_p1,index_starting_p2)
+        #calculate yams
+        index_starting_p1 = 90
+        index_starting_p2 = 115
+        yams_player1, yams_player2, diff_yams = self.make_calculations(list_entries,index_starting_p1,index_starting_p2)
+        '''calculate small bigs'''
+        #first 5 buttons are for player1
+        player1_bs= 0
+        player2_bs =0
+        list_diff_bs =[]
+        for i in range(0, 5):
+            if list_buttons[i].cget("text").isnumeric():
+                player1_bs+=int(list_buttons[i].cget("text"))
+        #from button index 5 is player 2
+        for i in range(5, 10):
+            if list_buttons[i].cget("text").isnumeric():
+                player2_bs+=int(list_buttons[i].cget("text"))
+        diff_bs = abs(player1_bs - player2_bs)
+        if player1_bs > player2_bs:
+            list_diff_bs.append(entry_player1.get())
+            list_diff_bs.append(diff_bs)
+        elif player2_bs > player1_bs:
+            list_diff_bs.append(entry_player2.get())
+            list_diff_bs.append(diff_bs)
+        else:
+            list_diff_bs.append("EQUAL")
+            list_diff_bs.append(diff_bs)
+        print(player1_bs, player2_bs, list_diff_bs)
+
+
+    def start(self):
+        self.running_time = True
+
+    def pause(self):
+        self.running_time = False
 
     def compute_full_logic(self, dice1, dice2):
         full_chck = self.checker.check_full_calculation(dice1, dice2)
@@ -83,13 +192,12 @@ class GuiCreator(object):
         else:
             button_player1_down["state"] = "disabled"
             button_player1_down["bg"] = "#EDE8E8"
-            #reset the total in case of mistake and put again
+            # reset the total in case of mistake and put again
             entries_numbers[60].delete(0, tkinter.END)
-            entries_numbers[60]["state"] ="disabled"
+            entries_numbers[60]["state"] = "disabled"
 
         if entries_numbers[1].get() != "" and entries_numbers[6].get() != "" and entries_numbers[11].get() != "" and \
                 entries_numbers[16].get() != "" and entries_numbers[21].get() != "" and entries_numbers[26].get() != "":
-
             button_player1_up["state"] = "normal"
             button_player1_up["bg"] = "#C4F3FF"
         else:
@@ -264,10 +372,14 @@ class GuiCreator(object):
     def totals_big_small_calculations(self, row, big_number, small_number, list_buttons):
         print("row: ", row, "big_number: ", big_number, "small_number: ", small_number, list_buttons)
         result = self.helper.calculate_totals_bs(row, int(big_number), int(small_number))
-        list_buttons[row-1]["text"] = str(result)
-        list_buttons[row-1]["state"] = "disabled"
+        #first disable everything in case it is again pressed by mistake
+        list_buttons[row-1]["text"] = ""
+        list_buttons[row - 1]["text"] = str(result)
+        list_buttons[row - 1]["state"] = "disabled"
 
     def compute_colouring(self, list_entry, result, row_number):
+        # first disable everything in case it is again pressed by mistake
+        list_entry.delete(0, "end")
         list_entry["state"] = "normal"
         list_entry.insert(0, result)
         if row_number == 5 or row_number == 10:
@@ -285,11 +397,10 @@ class GuiCreator(object):
             elif result > 122:
                 list_entry["bg"] = "#4D944B"
 
-
     def compute_totals(self, row_number, entries_numbers, *args):
         '''total entries start from index 60'''
         result = self.helper.calculate_totals(row_number, *args)
-        #start writing
+        # start writing
         if row_number == 1:
             self.compute_colouring(entries_numbers[60], result, row_number)
             button_player1_down["state"] = "disabled"
@@ -307,19 +418,19 @@ class GuiCreator(object):
             button_player1_served["state"] = "disabled"
         if row_number == 6:
             self.compute_colouring(entries_numbers[65], result, row_number)
-            button_player2_down["state"] ="disabled"
+            button_player2_down["state"] = "disabled"
         if row_number == 7:
             self.compute_colouring(entries_numbers[66], result, row_number)
-            button_player2_up["state"] ="disabled"
+            button_player2_up["state"] = "disabled"
         if row_number == 8:
             self.compute_colouring(entries_numbers[67], result, row_number)
-            button_player2_up_down["state"] ="disabled"
+            button_player2_up_down["state"] = "disabled"
         if row_number == 9:
             self.compute_colouring(entries_numbers[68], result, row_number)
-            button_player2_free["state"] ="disabled"
+            button_player2_free["state"] = "disabled"
         if row_number == 10:
             self.compute_colouring(entries_numbers[69], result, row_number)
-            button_player2_served["state"] ="disabled"
+            button_player2_served["state"] = "disabled"
 
     def create_main_logic(self, window):
         # full labels and entries
@@ -352,6 +463,8 @@ class GuiCreator(object):
         global button_player2_up_down
         global button_player2_free
         global button_player2_served
+        # label clock
+        global label_clock
 
         frame_game = LabelFrame(window, text="YAMS GAME", width=1500, height=850, cursor="spraycan", bg="#F2EBEB",
                                 fg="#040A4A", relief="raised", font=("Georgia", 20, "bold"), labelanchor=tkinter.N,
@@ -571,6 +684,24 @@ class GuiCreator(object):
                               justify="center", bd=1, width=35)
         entry_player2.insert(0, "P2")
         entry_player2.place(x=290, y=30)
+        # create clock
+        label_time = Label(frame_table, fg="#000000", bg="#CCC8C8", font=("Arial", 12, "bold"), relief="groove",
+                           justify="center", text="Time", width=4)
+        label_time.place(x=10, y=5)
+        label_clock = Label(frame_table, fg="#000000", bg="#CCC8C8", font=("Arial", 12, "bold"), relief="groove",
+                            justify="center", text="00:00:00", width=8)
+        label_clock.place(x=60, y=5)
+        self.update_clock(label_clock)
+        # create buttons start and stop
+        button_start = Button(frame_table, fg="#000000", bg="#CCC8C8", font=("Arial", 8, "bold"), relief="groove",
+                              justify="center", text="START", width=4,
+                              command=self.start)
+        button_start.place(x=210, y=5)
+        button_pause = Button(frame_table, fg="#000000", bg="#CCC8C8", font=("Arial", 8, "bold"), relief="groove",
+                              justify="center", text="STOP", width=4,
+                              command=self.pause)
+        button_pause.place(x=250, y=5)
+
         '''create first row with buttons'''
         button_start_yams = Button(frame_table, text="Yams", bg="#CFDBE3", bd=2, fg="#000000", border=2,
                                    justify="center", font=("Arial", 8, "bold"), cursor="arrow", width="5", height="1",
@@ -581,7 +712,8 @@ class GuiCreator(object):
                                      justify="center", font=("Arial", 8, "bold"), cursor="arrow", width=6, height="1",
                                      relief="solid", state="disabled", anchor="n",
                                      command=lambda: self.compute_totals(
-                                         1, entries_numbers, int(entries_numbers[0].get()), int(entries_numbers[5].get()),
+                                         1, entries_numbers, int(entries_numbers[0].get()),
+                                         int(entries_numbers[5].get()),
                                          int(entries_numbers[10].get()), int(entries_numbers[15].get()),
                                          int(entries_numbers[20].get()),
                                          int(entries_numbers[25].get())))
@@ -591,8 +723,9 @@ class GuiCreator(object):
                                    justify="center", font=("Arial", 8, "bold"), cursor="arrow", width=6, height="1",
                                    relief="solid", state="disabled", anchor="center",
                                    command=lambda: self.compute_totals
-                                   (2, entries_numbers,int(entries_numbers[1].get()), int(entries_numbers[6].get()),
-                                    int(entries_numbers[11].get()), int(entries_numbers[16].get()), int(entries_numbers[21].get()),
+                                   (2, entries_numbers, int(entries_numbers[1].get()), int(entries_numbers[6].get()),
+                                    int(entries_numbers[11].get()), int(entries_numbers[16].get()),
+                                    int(entries_numbers[21].get()),
                                     int(entries_numbers[26].get())))
         button_player1_up.place(x=90, y=50)
         button_player1_up_down = Button(frame_table, text=constans.ROW_NAMES[2], bg="#EDE8E8", bd=2, fg="#000000",
@@ -601,7 +734,8 @@ class GuiCreator(object):
                                         height="1",
                                         relief="solid", state="disabled", anchor="center",
                                         command=lambda: self.compute_totals
-                                        (3, entries_numbers,int(entries_numbers[2].get()), int(entries_numbers[7].get()),
+                                        (3, entries_numbers, int(entries_numbers[2].get()),
+                                         int(entries_numbers[7].get()),
                                          int(entries_numbers[12].get()), int(entries_numbers[17].get()),
                                          int(entries_numbers[22].get()),
                                          int(entries_numbers[27].get())))
@@ -612,8 +746,9 @@ class GuiCreator(object):
                                      height="1",
                                      relief="solid", state="disabled", anchor="center",
                                      command=lambda: self.compute_totals
-                                     (4,entries_numbers, int(entries_numbers[3].get()), int(entries_numbers[8].get()),
-                                      int(entries_numbers[13].get()), int(entries_numbers[18].get()), int(entries_numbers[23].get()),
+                                     (4, entries_numbers, int(entries_numbers[3].get()), int(entries_numbers[8].get()),
+                                      int(entries_numbers[13].get()), int(entries_numbers[18].get()),
+                                      int(entries_numbers[23].get()),
                                       int(entries_numbers[28].get())))
         button_player1_free.place(x=190, y=50)
         button_player1_served = Button(frame_table, text=constans.ROW_NAMES[4], bg="#EDE8E8", bd=2, fg="#000000",
@@ -622,8 +757,10 @@ class GuiCreator(object):
                                        height="1",
                                        relief="solid", state="disabled", anchor="center",
                                        command=lambda: self.compute_totals
-                                       (5, entries_numbers,  int(entries_numbers[4].get()), int(entries_numbers[9].get()),
-                                        int(entries_numbers[14].get()), int(entries_numbers[19].get()), int(entries_numbers[24].get()),
+                                       (5, entries_numbers, int(entries_numbers[4].get()),
+                                        int(entries_numbers[9].get()),
+                                        int(entries_numbers[14].get()), int(entries_numbers[19].get()),
+                                        int(entries_numbers[24].get()),
                                         int(entries_numbers[29].get())))
         button_player1_served.place(x=238, y=50)
         # player2
@@ -633,8 +770,10 @@ class GuiCreator(object):
                                      justify="center", font=("Arial", 8, "bold"), cursor="arrow", width=6, height="1",
                                      relief="solid", state="disabled", anchor="n",
                                      command=lambda: self.compute_totals
-                                     (6,entries_numbers,  int(entries_numbers[30].get()), int(entries_numbers[35].get()),
-                                      int(entries_numbers[40].get()), int(entries_numbers[45].get()), int(entries_numbers[50].get()),
+                                     (6, entries_numbers, int(entries_numbers[30].get()),
+                                      int(entries_numbers[35].get()),
+                                      int(entries_numbers[40].get()), int(entries_numbers[45].get()),
+                                      int(entries_numbers[50].get()),
                                       int(entries_numbers[55].get())))
         button_player2_down.place(x=x_continuation, y=50)
         button_player2_up = Button(frame_table, text=constans.ROW_NAMES[1], bg="#EDE8E8", bd=2, fg="#000000",
@@ -643,7 +782,8 @@ class GuiCreator(object):
                                    relief="solid", state="disabled", anchor="center",
                                    command=lambda: self.compute_totals
                                    (7, entries_numbers, int(entries_numbers[31].get()), int(entries_numbers[36].get()),
-                                    int(entries_numbers[41].get()), int(entries_numbers[46].get()), int(entries_numbers[51].get()),
+                                    int(entries_numbers[41].get()), int(entries_numbers[46].get()),
+                                    int(entries_numbers[51].get()),
                                     int(entries_numbers[56].get())))
         button_player2_up.place(x=x_continuation + 50, y=50)
         button_player2_up_down = Button(frame_table, text=constans.ROW_NAMES[2], bg="#EDE8E8", bd=2, fg="#000000",
@@ -652,7 +792,8 @@ class GuiCreator(object):
                                         height="1",
                                         relief="solid", state="disabled", anchor="center",
                                         command=lambda: self.compute_totals
-                                        (8, entries_numbers,  int(entries_numbers[32].get()), int(entries_numbers[37].get()),
+                                        (8, entries_numbers, int(entries_numbers[32].get()),
+                                         int(entries_numbers[37].get()),
                                          int(entries_numbers[42].get()), int(entries_numbers[47].get()),
                                          int(entries_numbers[52].get()),
                                          int(entries_numbers[57].get())))
@@ -663,9 +804,11 @@ class GuiCreator(object):
                                      height="1",
                                      relief="solid", state="disabled", anchor="center",
                                      command=lambda: self.compute_totals
-                                     (9, int(entries_numbers[33].get()), int(entries_numbers[38].get()),
-                                      int(entries_numbers[43].get()), int(entries_numbers[48].get()), int(entries_numbers[53].get()),
-                                      int(entries_numbers[58].get()), entries_numbers))
+                                     (9, entries_numbers, int(entries_numbers[33].get()),
+                                      int(entries_numbers[38].get()),
+                                      int(entries_numbers[43].get()), int(entries_numbers[48].get()),
+                                      int(entries_numbers[53].get()),
+                                      int(entries_numbers[58].get())))
         button_player2_free.place(x=x_continuation + 150, y=50)
         button_player2_served = Button(frame_table, text=constans.ROW_NAMES[4], bg="#EDE8E8", bd=2, fg="#000000",
                                        border=2,
@@ -673,8 +816,10 @@ class GuiCreator(object):
                                        height="1",
                                        relief="solid", state="disabled", anchor="center",
                                        command=lambda: self.compute_totals
-                                       (10, entries_numbers, int(entries_numbers[34].get()), int(entries_numbers[39].get()),
-                                        int(entries_numbers[44].get()), int(entries_numbers[49].get()), int(entries_numbers[54].get()),
+                                       (10, entries_numbers, int(entries_numbers[34].get()),
+                                        int(entries_numbers[39].get()),
+                                        int(entries_numbers[44].get()), int(entries_numbers[49].get()),
+                                        int(entries_numbers[54].get()),
                                         int(entries_numbers[59].get())))
         button_player2_served.place(x=x_continuation + 198, y=50)
         '''
@@ -739,7 +884,7 @@ class GuiCreator(object):
                 width=7,
                 relief="raised",
             )
-            #globals()[f"entry_{i}"].insert(0, str(i))
+            # globals()[f"entry_{i}"].insert(0, str(i))
             x = x0 + col * dx
             y = y0 + row * dy
             entries_numbers.append(globals()[f"entry_{i}"])
@@ -782,8 +927,9 @@ class GuiCreator(object):
         for i in range(0, 10):
             globals()[f"entry_{i + 63}"] = Entry(frame_table, bg="#EDE8E8", bd=2, fg="#000000", border=2,
                                                  justify="center", font=("Arial", 8, "bold"), cursor="arrow", width=7,
-                                                 relief="solid", state="disabled",
+                                                 relief="solid", state="normal",
                                                  )
+            # globals()[f"entry_{i + 63}"].insert(0, str(i+63))
             globals()[f"entry_{i + 63}"].place(x=x_start, y=y_start, height=38)
             entries_numbers.append(globals()[f"entry_{i + 63}"])
             if i == 4:
@@ -793,8 +939,8 @@ class GuiCreator(object):
 
         '''create lower games'''
         '''5 * 5 = 25'''
-        #player1
-        #index is at 70
+        # player1
+        # index is at 70
         x0 = 45
         y0 = 343
         dx = 49
@@ -803,8 +949,8 @@ class GuiCreator(object):
         for i in range(25):
             row = i // 5
             col = i % 5
-            if i>=20:
-                globals()[f"entry_{i+70}"] = Entry(
+            if i >= 20:
+                globals()[f"entry_{i + 70}"] = Entry(
                     frame_table,
                     bg="#F0F0F0",
                     bd=2,
@@ -818,8 +964,9 @@ class GuiCreator(object):
                 )
                 x = x0 + col * dx
                 y = y0 + row * dy
-                entries_numbers.append(globals()[f"entry_{i+70}"])
-                globals()[f"entry_{i+70}"].place(x=x, y=y, height=38)
+                # globals()[f"entry_{i+70}"].insert(0, str(i+70))
+                entries_numbers.append(globals()[f"entry_{i + 70}"])
+                globals()[f"entry_{i + 70}"].place(x=x, y=y, height=38)
             else:
                 globals()[f"entry_{i + 70}"] = Entry(
                     frame_table,
@@ -835,6 +982,7 @@ class GuiCreator(object):
                 )
                 x = x0 + col * dx
                 y = y0 + row * dy
+                # globals()[f"entry_{i + 70}"].insert(0, str(i + 70))
                 entries_numbers.append(globals()[f"entry_{i + 70}"])
                 globals()[f"entry_{i + 70}"].place(x=x, y=y, height=38)
         # player2
@@ -861,6 +1009,7 @@ class GuiCreator(object):
                 )
                 x = x0 + col * dx
                 y = y0 + row * dy
+                # globals()[f"entry_{i+95}"].insert(0, str(i+95))
                 entries_numbers.append(globals()[f"entry_{i + 95}"])
                 globals()[f"entry_{i + 95}"].place(x=x, y=y, height=38)
             else:
@@ -878,13 +1027,14 @@ class GuiCreator(object):
                 )
                 x = x0 + col * dx
                 y = y0 + row * dy
+                # globals()[f"entry_{i + 95}"].insert(0, str(i + 95))
                 entries_numbers.append(globals()[f"entry_{i + 95}"])
                 globals()[f"entry_{i + 95}"].place(x=x, y=y, height=38)
         print(entries_numbers)
         '''small and bigs'''
-        #player1
-        #index is at 120
-        #5 *2=10
+        # player1
+        # index is at 120
+        # 5 *2=10
         x0 = 45
         y0 = 533
         dx = 49
@@ -907,10 +1057,12 @@ class GuiCreator(object):
             )
             x = x0 + col * dx
             y = y0 + row * dy
-            #globals()[f"entry_{i + 120}"].insert(0, str(i+120))
+            # globals()[f"entry_{i + 120}"].insert(0, str(i+120))
             entries_numbers.append(globals()[f"entry_{i + 120}"])
             globals()[f"entry_{i + 120}"].place(x=x, y=y, height=38)
-            globals()[f"entry_{i + 120}"].bind("<KeyRelease>", lambda event: self.check_small_big_totals(entries_numbers, list_buttons_totals))
+            globals()[f"entry_{i + 120}"].bind("<KeyRelease>",
+                                               lambda event: self.check_small_big_totals(entries_numbers,
+                                                                                         list_buttons_totals))
         # player2
         # index is at 130
         # 5 *2=10
@@ -936,14 +1088,16 @@ class GuiCreator(object):
             )
             x = x0 + col * dx
             y = y0 + row * dy
-            #globals()[f"entry_{i + 130}"].insert(0, str(i+130))
+            # globals()[f"entry_{i + 130}"].insert(0, str(i+130))
             entries_numbers.append(globals()[f"entry_{i + 130}"])
             globals()[f"entry_{i + 130}"].place(x=x, y=y, height=38)
-            globals()[f"entry_{i + 130}"].bind("<KeyRelease>",lambda event: self.check_small_big_totals(entries_numbers, list_buttons_totals))
+            globals()[f"entry_{i + 130}"].bind("<KeyRelease>",
+                                               lambda event: self.check_small_big_totals(entries_numbers,
+                                                                                         list_buttons_totals))
         '''totals for big and small'''
         x_start = 42
         y_start = 607
-        list_buttons_totals =  list()
+        list_buttons_totals = list()
 
         # Button 0
         button_0 = Button(
@@ -952,11 +1106,10 @@ class GuiCreator(object):
             justify="center", font=("Arial", 8, "bold"),
             cursor="arrow", width=6, relief="solid",
             state="disabled", height=2, anchor="center",
-            command=lambda : self.totals_big_small_calculations(1, entries_numbers[125].get(),
-                                                                entries_numbers[120].get(), list_buttons_totals))
+            command=lambda: self.totals_big_small_calculations(1, entries_numbers[125].get(),
+                                                               entries_numbers[120].get(), list_buttons_totals))
         button_0.place(x=x_start, y=y_start)
         list_buttons_totals.append(button_0)
-
         x_start += 49
 
         # Button 1
@@ -971,7 +1124,6 @@ class GuiCreator(object):
                                                                list_buttons_totals))
         button_1.place(x=x_start, y=y_start)
         list_buttons_totals.append(button_1)
-
         x_start += 49
 
         # Button 2
@@ -1004,8 +1156,6 @@ class GuiCreator(object):
         x_start += 49
 
         # Button 4
-        row_key = self.rows[4]
-
         button_4 = Button(
             frame_table,
             bg="#F0F0F0", bd=2, fg="#000000", border=2,
@@ -1017,7 +1167,6 @@ class GuiCreator(object):
                                                                list_buttons_totals))
         button_4.place(x=x_start, y=y_start)
         list_buttons_totals.append(button_4)
-
         x_start += 53  # special case
 
         # Button 5
@@ -1032,7 +1181,6 @@ class GuiCreator(object):
                                                                list_buttons_totals))
         button_5.place(x=x_start, y=y_start)
         list_buttons_totals.append(button_5)
-
         x_start += 49
 
         # Button 6
@@ -1061,7 +1209,6 @@ class GuiCreator(object):
                                                                list_buttons_totals))
         button_7.place(x=x_start, y=y_start)
         list_buttons_totals.append(button_7)
-
         x_start += 49
 
         # Button 8
@@ -1092,8 +1239,16 @@ class GuiCreator(object):
 
         button_9.place(x=x_start, y=y_start)
         list_buttons_totals.append(button_9)
-
         x_start += 49
+        '''create button to finish game'''
+        button_finish = Button(frame_table, text="FINISH GAME", bg="#B9F0C0", bd=2, fg="#000000",
+                               relief="raised",
+                               justify="center", font=("Arial", 10, "bold"), cursor="arrow", width="10",
+                               height="1",
+                               command=lambda: self.calculate_results(entries_numbers, list_buttons_totals))
+        button_finish.place(x=245, y=645)
+
+        '''create the frame for the results'''
 
     def create_main_gui(self):
         root = Tk()
