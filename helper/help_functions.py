@@ -1,6 +1,3 @@
-import constans
-
-
 class Helper:
 
     def __init__(self):
@@ -45,9 +42,8 @@ class Helper:
             result = big - small
         return result
 
-    def calculate_full(self, dice1, dice2):
+    def calculate_full(self, dice1, dice2) -> tuple[int, int, int]:
         '''
-        :param row_number: if it is "S", double it
         :param dice1: dice which appears 3 times
         :param dice2: dice which appears 2 times
         :return: full calculation normal, full calculation+10, full calculation served
@@ -57,7 +53,7 @@ class Helper:
         result_served = ((3 * int(dice1) + 2 * int(dice2)) + 10) * 2
         return result_normal, result_extra_10, result_served
 
-    def calculate_4_of_a_kind(self, dice1):
+    def calculate_4_of_a_kind(self, dice1) -> tuple[int, int, int]:
         '''
         :param dice1: dice which appears 4 times
         :return: careu calculation normal, careu calculation+10, careu calculation served
@@ -67,7 +63,7 @@ class Helper:
         result_served = ((4 * int(dice1)) + 20) * 2
         return result_normal, result_extra_10, result_served
 
-    def calculate_yams(self, dice1):
+    def calculate_yams(self, dice1) ->tuple[int, int, int]:
         '''
         :param dice1: dice which appears 5 times
         :return: yams calculation normal, yams calculation+10, yams calculation served
