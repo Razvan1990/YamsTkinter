@@ -1,6 +1,8 @@
 import tkinter
 import os
 from tkinter import *
+from tkinter import messagebox
+from tkinter import ttk
 
 import constans
 from helper.checker import Checker
@@ -21,6 +23,8 @@ class GuiCreator(object):
         self.hours = 0
         self.running_time = False
         self.dict_scores = {}
+        self.list_games = ["T_NR", "F", "q", "Q", "K", "Y", "T_SB", "TOTAL_SCORES"]
+
 
     def update_clock(self, label_clock):
         if self.running_time:
@@ -44,11 +48,9 @@ class GuiCreator(object):
         player2_score = 0
         list_diff = []
         for i in range(index_start1, index_start1 + 5):
-            print(list_entries[i].get())
             if list_entries[i].get().isnumeric():
                 player1_score += int(list_entries[i].get())
         for i in range(index_start2, index_start2 + 5):
-            print(list_entries[i].get())
             if list_entries[i].get().isnumeric():
                 player2_score += int(list_entries[i].get())
         diff_score = abs(player2_score - player1_score)
@@ -70,31 +72,51 @@ class GuiCreator(object):
         :param list_buttons: buttons from the small and big totals
         :return: the self.dict_scores will be a dict like: {p1:{"totals":x, "full":y....}, p2:"{"totals":x2, "full":y2}, difference: {"totals":abs(x2-x1)...}
         '''
-
+        list_scores_player1 =[]
+        list_scores_player2 =[]
+        list_scores_differences =[]
         index_starting_p1 = 60
         index_starting_p2 = 65
         # calculate totals
         total_player1, total_player2, diff_totals = self.make_calculations(list_entries, index_starting_p1,index_starting_p2)
+        list_scores_player1.append(total_player1)
+        list_scores_player2.append(total_player2)
+        list_scores_differences.append(diff_totals)
         # calculate full
         index_starting_p1 = 70
         index_starting_p2 = 95
         full_player1, full_player2, diff_full = self.make_calculations(list_entries, index_starting_p1,index_starting_p2)
+        list_scores_player1.append(full_player1)
+        list_scores_player2.append(full_player2)
+        list_scores_differences.append(diff_full)
         # calculate small straight
         index_starting_p1 = 75
         index_starting_p2 = 100
         straight_s_player1, straight_s_player2, diff_straight_s = self.make_calculations(list_entries, index_starting_p1,index_starting_p2)
+        list_scores_player1.append(straight_s_player1)
+        list_scores_player2.append(straight_s_player2)
+        list_scores_differences.append(diff_straight_s)
         # calculate big straight
         index_starting_p1 = 80
         index_starting_p2 = 105
         straight_b_player1, straight_b_player2, diff_straight_b = self.make_calculations(list_entries,index_starting_p1,index_starting_p2)
+        list_scores_player1.append(straight_b_player1)
+        list_scores_player2.append(straight_b_player2)
+        list_scores_differences.append(diff_straight_b)
         #calculate 4 of a kind
         index_starting_p1 = 85
         index_starting_p2 = 110
         careu_player1, careu_player2, diff_careu = self.make_calculations(list_entries,index_starting_p1,index_starting_p2)
+        list_scores_player1.append(careu_player1)
+        list_scores_player2.append(careu_player2)
+        list_scores_differences.append(diff_careu)
         #calculate yams
         index_starting_p1 = 90
         index_starting_p2 = 115
         yams_player1, yams_player2, diff_yams = self.make_calculations(list_entries,index_starting_p1,index_starting_p2)
+        list_scores_player1.append(yams_player1)
+        list_scores_player2.append(yams_player2)
+        list_scores_differences.append(diff_yams)
         '''calculate small bigs'''
         #first 5 buttons are for player1
         player1_bs= 0
@@ -117,7 +139,101 @@ class GuiCreator(object):
         else:
             list_diff_bs.append("EQUAL")
             list_diff_bs.append(diff_bs)
-        print(player1_bs, player2_bs, list_diff_bs)
+        list_scores_player1.append(player1_bs)
+        list_scores_player2.append(player2_bs)
+        list_scores_differences.append(list_diff_bs)
+        #TODO - POPULATE DICTIONARY
+        dict_scores_player1 ={}
+        dict_scores_player2 = {}
+        dict_differences = {}
+        total_score_player1 = sum(list_scores_player1)
+        list_scores_player1.append(total_score_player1)
+
+        total_score_player2 = sum(list_scores_player2)
+        list_scores_player2.append(total_score_player2)
+
+        list_scores_total_differences =[]
+        total_difference = abs (total_score_player1 - total_score_player2)
+        if total_score_player1 > total_score_player2:
+            list_scores_total_differences.append(entry_player1.get())
+            list_scores_total_differences.append(total_difference)
+            list_scores_differences.append(list_scores_total_differences)
+        elif total_score_player2 > total_score_player1:
+            list_scores_total_differences.append(entry_player2.get())
+            list_scores_total_differences.append(total_difference)
+            list_scores_differences.append(list_scores_total_differences)
+        else:
+            list_scores_total_differences.append("EQUAL")
+            list_scores_total_differences.append(total_difference)
+            list_scores_differences.append(list_scores_total_differences)
+        #list_total_scores = [total_score_player1, total_score_player2, total_difference]
+
+        for i in range (0, len(self.list_games)):
+            dict_scores_player1.update({self.list_games[i]:list_scores_player1[i]})
+            dict_scores_player2.update({self.list_games[i]:list_scores_player2[i]})
+            dict_differences.update({self.list_games[i]:list_scores_differences[i]})
+        self.dict_scores.update({entry_player1.get():dict_scores_player1})
+        self.dict_scores.update({entry_player2.get():dict_scores_player2})
+        self.dict_scores.update({"DIFFERENCE":dict_differences})
+        for key in self.dict_scores.keys():
+            print(key, self.dict_scores[key])
+
+        #print message to user to press calculate and enable result button
+        messagebox.showinfo("PRESS CALCULATE", "Press the 'CHECK RESULTS' button on left to see the results")
+        results_button["state"] = "normal"
+        results_button["bg"] = "#B9F0C0"
+
+    def insert_results(self, window):
+        '''
+
+        :param window: the frame
+        :return: a treeview with the results
+        '''
+        columns =["Game"]
+        for key in self.dict_scores:
+            columns.append(key)
+        col_tuple = tuple(columns)
+        results_treeview = ttk.Treeview(window, show='headings', columns=col_tuple, height=9, )
+        # ADD THE COLUMNS
+        # define the headings
+        results_treeview.heading(0, text=col_tuple[0], anchor="center")
+        results_treeview.heading(1, text=col_tuple[1], anchor="center")
+        results_treeview.heading(2, text=col_tuple[2], anchor="center")
+        results_treeview.heading(3, text=col_tuple[3], anchor="center")
+        # redefine column dimensions
+        results_treeview.column(col_tuple[0], width=120, stretch=YES, anchor="center" )
+        results_treeview.column(col_tuple[1], width=70, stretch=YES, anchor="center" )
+        results_treeview.column(col_tuple[2], width=70, stretch=YES, anchor="center" )
+        results_treeview.column(col_tuple[3], width=140, stretch=YES, anchor="center" )
+
+        results_treeview.tag_configure("TOTAL_SCORES", background="#CDFA20", foreground="black", font=("Helvetica", 10, "bold"))
+        # create a custom style
+        style = ttk.Style(window)
+        style.theme_use("clam") #this permits the foreground property
+        style.configure("Treeview.Heading", background="#3871A8", foreground="#F0F0F0", font=("Helvetica", 10, "bold"), justify="center")
+        style.configure("Treeview", background="#400F20", fieldbackground="#F2EBEB", foreground="#ffffff",
+                        font=("Helvetica", 8, "bold"))
+        #add values in treeview
+        player1_scores = self.dict_scores[entry_player1.get()]
+        player2_scores = self.dict_scores[entry_player2.get()]
+        difference_scores= self.dict_scores["DIFFERENCE"]
+
+        #just iterate over one dict -> these have the same length and get value of each game
+        for game in player1_scores.keys():
+            winner, score_dif = difference_scores[game]
+            if winner == "EQUAL":
+                diff_append = "It's equality"
+            else:
+                diff_append = f"{score_dif} for {winner}"
+            row = (game, player1_scores[game], player2_scores[game], diff_append)
+            if game == self.list_games[len(self.list_games) -1]:
+                results_treeview.insert('', 'end', values=("", "", "", ""))
+                results_treeview.insert('', 'end', values=row, tags="TOTAL_SCORES")
+            else:
+                results_treeview.insert('', 'end', values=row)
+        results_treeview.place(x=10, y=70)
+
+
 
 
     def start(self):
@@ -289,7 +405,6 @@ class GuiCreator(object):
 
     def check_small_big_totals(self, entries_numbers, list_buttons):
         if entries_numbers[120].get() != "" and entries_numbers[125].get() != "":
-            print("entered")
             list_buttons[0]["state"] = "normal"
             list_buttons[0]["bg"] = "#C4F3FF"
         else:
@@ -465,20 +580,22 @@ class GuiCreator(object):
         global button_player2_served
         # label clock
         global label_clock
+        #results button
+        global results_button
 
         frame_game = LabelFrame(window, text="YAMS GAME", width=1500, height=850, cursor="spraycan", bg="#F2EBEB",
-                                fg="#040A4A", relief="raised", font=("Georgia", 20, "bold"), labelanchor=tkinter.N,
+                                fg="#040A4A", relief="raised", font=("Georgia", 20, "bold"), labelanchor="n",
                                 bd=5, borderwidth=5)
-        frame_game.grid(row=0, column=0, padx=90, pady=20, sticky=tkinter.NSEW)
+        frame_game.grid(row=0, column=0, padx=90, pady=20, sticky="nsew")
         # create frame for calculations
         frame_calculation = LabelFrame(frame_game, text="Calculations", width=400, height=700, cursor="spraycan",
                                        bg="#F2EBEB",
                                        fg="#040A4A", relief="ridge", font=("Georgia", 16, "bold"),
-                                       labelanchor=tkinter.N)
+                                       labelanchor="n")
         frame_calculation.place(x=50, y=50)
         '''frame for full house'''
         frame_full = LabelFrame(frame_calculation, text="Full", width=350, height=150, cursor="spraycan", bg="#F2EBEB",
-                                fg="#040A4A", relief="ridge", font=("Georgia", 12, "bold"), labelanchor=tkinter.N)
+                                fg="#040A4A", relief="ridge", font=("Georgia", 12, "bold"), labelanchor="n")
         frame_full.place(x=20, y=20)
         label_dice1 = Label(frame_full, text="DICE1", bg="#F2EBEB", fg="#040A4A", font=("Arial", 10, "bold"),
                             justify="center", bd=2)
@@ -523,17 +640,17 @@ class GuiCreator(object):
         '''frame for straight'''
         frame_straight = LabelFrame(frame_calculation, text="Straight", width=350, height=150, cursor="spraycan",
                                     bg="#F2EBEB",
-                                    fg="#040A4A", relief="ridge", font=("Georgia", 12, "bold"), labelanchor=tkinter.N)
+                                    fg="#040A4A", relief="ridge", font=("Georgia", 12, "bold"), labelanchor="n")
         frame_straight.place(x=20, y=180)
         frame_small_straight = LabelFrame(frame_straight, text="Small - 12345", width=150, height=100,
                                           cursor="spraycan", bg="#F2EBEB",
                                           fg="#040A4A", relief="ridge", font=("Georgia", 10, "bold"),
-                                          labelanchor=tkinter.N)
+                                          labelanchor="n")
         frame_small_straight.place(x=15, y=20)
         frame_big_straight = LabelFrame(frame_straight, text="Big - 23456", width=150, height=100,
                                         cursor="spraycan", bg="#F2EBEB",
                                         fg="#040A4A", relief="ridge", font=("Georgia", 10, "bold"),
-                                        labelanchor=tkinter.N)
+                                        labelanchor="n")
         frame_big_straight.place(x=180, y=20)
         # small straight
         label_normal_small_straight = Label(frame_small_straight, text="Normal", bg="#F2EBEB", fg="#040A4A",
@@ -590,7 +707,7 @@ class GuiCreator(object):
         '''frame for 4 of a kind'''
         frame_careu = LabelFrame(frame_calculation, text="4 Of A Kind", width=350, height=150, cursor="spraycan",
                                  bg="#F2EBEB", fg="#040A4A", relief="ridge", font=("Georgia", 12, "bold"),
-                                 labelanchor=tkinter.N)
+                                 labelanchor="n")
         frame_careu.place(x=20, y=340)
         label_dice_careu = Label(frame_careu, text="DICE1", bg="#F2EBEB", fg="#040A4A", font=("Arial", 10, "bold"),
                                  justify="center", bd=2)
@@ -630,7 +747,7 @@ class GuiCreator(object):
         '''frame for yams'''
         frame_yams = LabelFrame(frame_calculation, text="Yams", width=350, height=150, cursor="spraycan",
                                 bg="#F2EBEB", fg="#040A4A", relief="ridge", font=("Georgia", 12, "bold"),
-                                labelanchor=tkinter.N)
+                                labelanchor="n")
         frame_yams.place(x=20, y=500)
         label_dice_yams = Label(frame_yams, text="DICE1", bg="#F2EBEB", fg="#040A4A", font=("Arial", 10, "bold"),
                                 justify="center", bd=2)
@@ -673,7 +790,7 @@ class GuiCreator(object):
         frame_table = LabelFrame(frame_game, text="PLAY", width=560, height=700, cursor="spraycan",
                                  bg="#F2EBEB",
                                  fg="#040A4A", relief="ridge", font=("Georgia", 16, "bold"),
-                                 labelanchor=tkinter.N)
+                                 labelanchor="n")
         frame_table.place(x=475, y=50)
         # put the entries
         entry_player1 = Entry(frame_table, fg="#8C1235", font=("Arial", 10, "bold"), bg="#BCDEE3", relief="raised",
@@ -929,7 +1046,7 @@ class GuiCreator(object):
                                                  justify="center", font=("Arial", 8, "bold"), cursor="arrow", width=7,
                                                  relief="solid", state="normal",
                                                  )
-            # globals()[f"entry_{i + 63}"].insert(0, str(i+63))
+            globals()[f"entry_{i + 63}"].insert(0, str(i+63))
             globals()[f"entry_{i + 63}"].place(x=x_start, y=y_start, height=38)
             entries_numbers.append(globals()[f"entry_{i + 63}"])
             if i == 4:
@@ -964,7 +1081,7 @@ class GuiCreator(object):
                 )
                 x = x0 + col * dx
                 y = y0 + row * dy
-                # globals()[f"entry_{i+70}"].insert(0, str(i+70))
+                globals()[f"entry_{i+70}"].insert(0, str(i+70))
                 entries_numbers.append(globals()[f"entry_{i + 70}"])
                 globals()[f"entry_{i + 70}"].place(x=x, y=y, height=38)
             else:
@@ -982,7 +1099,7 @@ class GuiCreator(object):
                 )
                 x = x0 + col * dx
                 y = y0 + row * dy
-                # globals()[f"entry_{i + 70}"].insert(0, str(i + 70))
+                globals()[f"entry_{i + 70}"].insert(0, str(i + 70))
                 entries_numbers.append(globals()[f"entry_{i + 70}"])
                 globals()[f"entry_{i + 70}"].place(x=x, y=y, height=38)
         # player2
@@ -1009,7 +1126,7 @@ class GuiCreator(object):
                 )
                 x = x0 + col * dx
                 y = y0 + row * dy
-                # globals()[f"entry_{i+95}"].insert(0, str(i+95))
+                globals()[f"entry_{i+95}"].insert(0, str(i+95))
                 entries_numbers.append(globals()[f"entry_{i + 95}"])
                 globals()[f"entry_{i + 95}"].place(x=x, y=y, height=38)
             else:
@@ -1027,10 +1144,9 @@ class GuiCreator(object):
                 )
                 x = x0 + col * dx
                 y = y0 + row * dy
-                # globals()[f"entry_{i + 95}"].insert(0, str(i + 95))
+                globals()[f"entry_{i + 95}"].insert(0, str(i + 95))
                 entries_numbers.append(globals()[f"entry_{i + 95}"])
                 globals()[f"entry_{i + 95}"].place(x=x, y=y, height=38)
-        print(entries_numbers)
         '''small and bigs'''
         # player1
         # index is at 120
@@ -1057,7 +1173,7 @@ class GuiCreator(object):
             )
             x = x0 + col * dx
             y = y0 + row * dy
-            # globals()[f"entry_{i + 120}"].insert(0, str(i+120))
+            globals()[f"entry_{i + 120}"].insert(0, str(i+120))
             entries_numbers.append(globals()[f"entry_{i + 120}"])
             globals()[f"entry_{i + 120}"].place(x=x, y=y, height=38)
             globals()[f"entry_{i + 120}"].bind("<KeyRelease>",
@@ -1088,7 +1204,7 @@ class GuiCreator(object):
             )
             x = x0 + col * dx
             y = y0 + row * dy
-            # globals()[f"entry_{i + 130}"].insert(0, str(i+130))
+            globals()[f"entry_{i + 130}"].insert(0, str(i+130))
             entries_numbers.append(globals()[f"entry_{i + 130}"])
             globals()[f"entry_{i + 130}"].place(x=x, y=y, height=38)
             globals()[f"entry_{i + 130}"].bind("<KeyRelease>",
@@ -1249,6 +1365,19 @@ class GuiCreator(object):
         button_finish.place(x=245, y=645)
 
         '''create the frame for the results'''
+        frame_calculation = LabelFrame(frame_game, text="Results", width=420, height=700, cursor="spraycan",
+                                      bg="#F2EBEB",
+                                      fg="#040A4A", relief="ridge", font=("Georgia", 16, "bold"),
+                                      labelanchor="n")
+        frame_calculation.place(x=1060, y=50)
+        #add button results
+        results_button = Button(frame_calculation, text="CHECK RESULTS",  fg="#000000", bg="#CCC8C8", bd=2,
+                               relief="raised",
+                               justify="center", font=("Arial", 10, "bold"), cursor="arrow", width="15",
+                               height="2",state="disabled",command=lambda: self.insert_results(frame_calculation))
+        results_button.place(x=frame_calculation["width"]/3-5, y=20) #~118
+
+
 
     def create_main_gui(self):
         root = Tk()
