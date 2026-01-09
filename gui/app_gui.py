@@ -142,7 +142,7 @@ class GuiCreator(object):
         list_scores_player1.append(player1_bs)
         list_scores_player2.append(player2_bs)
         list_scores_differences.append(list_diff_bs)
-        #TODO - POPULATE DICTIONARY
+        #DICTIONARY POPULATION
         dict_scores_player1 ={}
         dict_scores_player2 = {}
         dict_differences = {}
@@ -232,6 +232,39 @@ class GuiCreator(object):
             else:
                 results_treeview.insert('', 'end', values=row)
         results_treeview.place(x=10, y=70)
+        if player1_scores[self.list_games[len(self.list_games)-1]]  > player2_scores[self.list_games[len(self.list_games)-1]]:
+            message = f"The winner is {entry_player1.get()} with a difference of:"
+        elif player2_scores[self.list_games[len(self.list_games)-1]] > player1_scores[self.list_games[len(self.list_games)-1]]:
+            message = f"The winner is {entry_player2.get()} with a difference of:"
+        else:
+            message = "We have a perfect equality"
+        winner_label["text"] = message
+        winner_label["relief"] = "groove"
+
+        difference_label["text"] = str(difference_scores[self.list_games[len(self.list_games)-1]][1])
+        difference_label["relief"] = "groove"
+        if difference_scores[self.list_games[len(self.list_games)-1]][1] ==0:
+            #grey = 0
+            difference_label["bg"] ="#EBEBEB"
+            difference_label["fg"] = "#000000"
+        elif 0 < difference_scores[self.list_games[len(self.list_games)-1]][1]  <= 25:
+            #0<dif<25 - yellow
+            difference_label["bg"] = "#E8F00A"
+            difference_label["fg"] = "#FFFFFF"
+        elif 25 < difference_scores[self.list_games[len(self.list_games)-1]][1] <= 100:
+            #25<dif<100 - light green
+            difference_label["bg"] = "#A8FF99"
+            difference_label["fg"] = "#000000"
+        elif 100 < difference_scores[self.list_games[len(self.list_games)-1]][1] <= 200:
+            #100<dif<200 - dark green
+            difference_label["bg"] = "#1D5E13"
+            difference_label["fg"] = "#FFFFFF"
+        elif difference_scores[self.list_games[len(self.list_games)-1]][1] > 200:
+            #diff > 200 - red
+            difference_label["bg"] = "#B00711"
+            difference_label["fg"] = "#FFFFFF"
+
+
 
 
 
@@ -485,7 +518,6 @@ class GuiCreator(object):
             list_buttons[9]["state"] = "disabled"
 
     def totals_big_small_calculations(self, row, big_number, small_number, list_buttons):
-        print("row: ", row, "big_number: ", big_number, "small_number: ", small_number, list_buttons)
         result = self.helper.calculate_totals_bs(row, int(big_number), int(small_number))
         #first disable everything in case it is again pressed by mistake
         list_buttons[row-1]["text"] = ""
@@ -582,6 +614,9 @@ class GuiCreator(object):
         global label_clock
         #results button
         global results_button
+        #winner labels
+        global winner_label
+        global difference_label
 
         frame_game = LabelFrame(window, text="YAMS GAME", width=1500, height=850, cursor="spraycan", bg="#F2EBEB",
                                 fg="#040A4A", relief="raised", font=("Georgia", 20, "bold"), labelanchor="n",
@@ -1046,7 +1081,7 @@ class GuiCreator(object):
                                                  justify="center", font=("Arial", 8, "bold"), cursor="arrow", width=7,
                                                  relief="solid", state="normal",
                                                  )
-            globals()[f"entry_{i + 63}"].insert(0, str(i+63))
+            #globals()[f"entry_{i + 63}"].insert(0, str(i+63)) -for debug
             globals()[f"entry_{i + 63}"].place(x=x_start, y=y_start, height=38)
             entries_numbers.append(globals()[f"entry_{i + 63}"])
             if i == 4:
@@ -1081,7 +1116,7 @@ class GuiCreator(object):
                 )
                 x = x0 + col * dx
                 y = y0 + row * dy
-                globals()[f"entry_{i+70}"].insert(0, str(i+70))
+                #globals()[f"entry_{i+70}"].insert(0, str(i+70)) -for debug
                 entries_numbers.append(globals()[f"entry_{i + 70}"])
                 globals()[f"entry_{i + 70}"].place(x=x, y=y, height=38)
             else:
@@ -1099,7 +1134,7 @@ class GuiCreator(object):
                 )
                 x = x0 + col * dx
                 y = y0 + row * dy
-                globals()[f"entry_{i + 70}"].insert(0, str(i + 70))
+                #globals()[f"entry_{i + 70}"].insert(0, str(i + 70)) -for debug
                 entries_numbers.append(globals()[f"entry_{i + 70}"])
                 globals()[f"entry_{i + 70}"].place(x=x, y=y, height=38)
         # player2
@@ -1126,7 +1161,7 @@ class GuiCreator(object):
                 )
                 x = x0 + col * dx
                 y = y0 + row * dy
-                globals()[f"entry_{i+95}"].insert(0, str(i+95))
+                #globals()[f"entry_{i+95}"].insert(0, str(i+95)) -for debug
                 entries_numbers.append(globals()[f"entry_{i + 95}"])
                 globals()[f"entry_{i + 95}"].place(x=x, y=y, height=38)
             else:
@@ -1144,7 +1179,7 @@ class GuiCreator(object):
                 )
                 x = x0 + col * dx
                 y = y0 + row * dy
-                globals()[f"entry_{i + 95}"].insert(0, str(i + 95))
+                #globals()[f"entry_{i + 95}"].insert(0, str(i + 95)) -for debug
                 entries_numbers.append(globals()[f"entry_{i + 95}"])
                 globals()[f"entry_{i + 95}"].place(x=x, y=y, height=38)
         '''small and bigs'''
@@ -1173,7 +1208,7 @@ class GuiCreator(object):
             )
             x = x0 + col * dx
             y = y0 + row * dy
-            globals()[f"entry_{i + 120}"].insert(0, str(i+120))
+            #globals()[f"entry_{i + 120}"].insert(0, str(i+120)) - for debug
             entries_numbers.append(globals()[f"entry_{i + 120}"])
             globals()[f"entry_{i + 120}"].place(x=x, y=y, height=38)
             globals()[f"entry_{i + 120}"].bind("<KeyRelease>",
@@ -1204,7 +1239,7 @@ class GuiCreator(object):
             )
             x = x0 + col * dx
             y = y0 + row * dy
-            globals()[f"entry_{i + 130}"].insert(0, str(i+130))
+            #globals()[f"entry_{i + 130}"].insert(0, str(i+130)) - for debug
             entries_numbers.append(globals()[f"entry_{i + 130}"])
             globals()[f"entry_{i + 130}"].place(x=x, y=y, height=38)
             globals()[f"entry_{i + 130}"].bind("<KeyRelease>",
@@ -1376,7 +1411,13 @@ class GuiCreator(object):
                                justify="center", font=("Arial", 10, "bold"), cursor="arrow", width="15",
                                height="2",state="disabled",command=lambda: self.insert_results(frame_calculation))
         results_button.place(x=frame_calculation["width"]/3-5, y=20) #~118
-
+        #add label for winner
+        winner_label = Label(frame_calculation, fg ="#000000", bg = "#F2EBEB", cursor="arrow", bd = 2, justify="center", font = ("Arial", 12, "bold"),
+                             width = 35, text ="")
+        winner_label.place (x=25, y = 400)
+        difference_label = Label(frame_calculation, fg ="#000000", bg = "#F2EBEB", cursor="arrow", bd = 2, justify="center", font = ("Arial", 14, "bold"),
+                             width = 10, text ="")
+        difference_label.place(x=135, y = 425)
 
 
     def create_main_gui(self):
